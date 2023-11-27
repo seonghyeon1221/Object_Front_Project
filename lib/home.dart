@@ -4,6 +4,8 @@ import 'category_first.dart';
 import 'fastfood.dart';
 import 'mypage.dart';
 import 'package:provider/provider.dart';
+import 'dessert.dart';
+import 'dart:math';
 
 void main() {
   runApp(
@@ -16,6 +18,7 @@ void main() {
         routes: {
           '/password_change': (context) => PasswordChangePage(),
           '/allergies_edit': (context) => AllergiesEditPage(),
+          '/category_selection': (context) => CategorySelectionPage(),
         },
       ),
     ),
@@ -35,11 +38,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1;
+  int _currentIndex = 1; // 바텀 네비게이션 바 기본 탭을 2번째로 변경
 
   final List<Widget> _pages = [
+    MyInfoPage(),
     MyHomePage(),
-    HomePage(),
     SettingPage(),
   ];
 
@@ -53,17 +56,48 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      // Remove BottomNavigationBar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          refresh(index);
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'My page',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+
+
+class MyHomePage extends StatelessWidget {
+  final List<String> foodItems = [
+    '치킨', '피자', '햄버거', '샌드위치', '컵밥', '밥', '면', '떡', '고기', '디저트'
+  ];
+
+  String getRandomFoodItem() {
+    final random = Random();
+    final index = random.nextInt(foodItems.length);
+    return foodItems[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('인후한끼'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -101,30 +135,31 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyCategorySelectionPage()),
+                        MaterialPageRoute(builder: (context) => DessertPage()),
                       );
                     },
                   ),
                 ),
               ],
             ),
-
             LayerWidget(
-              color: Colors.lightBlue,
+              color: Colors.white,
               text: 'Layer 1 내용',
+              onPressed: () {
+                final String recommendedFood = getRandomFoodItem();
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('추천 음식: $recommendedFood'),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-            // LayerWidget(
-            //   color: Colors.lightGreen,
-            //   text: 'Layer 2 내용',
-            // ),
-            // LayerWidget(
-            //   color: Colors.orange,
-            //   text: 'Layer 3 내용',
-            // ),
-            // LayerWidget(
-            //   color: Colors.purple,
-            //   text: 'Layer 4 내용',
-            // ),
           ],
         ),
       ),
@@ -161,15 +196,19 @@ class SquareButton extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
 
 class LayerWidget extends StatelessWidget {
   final Color color;
   final String text;
+  final VoidCallback onPressed;
 
-  LayerWidget({required this.color, required this.text});
+  LayerWidget({
+    required this.color,
+    required this.text,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +216,10 @@ class LayerWidget extends StatelessWidget {
       height: 200,
       color: color,
       child: Center(
-        child: Text(text),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          child: Text('추천 음식 보기'),
+        ),
       ),
     );
   }
