@@ -112,7 +112,9 @@ class SignUpList extends State<SignUpPage> {
           Row(
             children: [
               Container(
+                alignment: Alignment.centerRight,
                 padding: EdgeInsets.only(left: 10),
+                width: 70, // 원하는 너비 값으로 조정
                 child: Text("아이디"),
               ),
               Expanded(
@@ -140,8 +142,10 @@ class SignUpList extends State<SignUpPage> {
           Row(
             children: [
               Container(
+                alignment: Alignment.centerRight,
                 padding: EdgeInsets.only(left: 10),
-                child: Text("비밀번호"),
+                width: 70, // 원하는 너비 값으로 조정
+                child: Text("패스워드"),
               ),
               Expanded(
                 child: Card(
@@ -167,7 +171,7 @@ class SignUpList extends State<SignUpPage> {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 10, right: 10),
                 child: Text("알러지 유무"),
               ),
               Switch(
@@ -224,24 +228,25 @@ class SignUpList extends State<SignUpPage> {
           ),
           Divider(),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Container(
+                padding: EdgeInsets.only(right: 8),
+                child: Text(
+                  outputText,
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
               Padding(
-                padding: EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(right: 8),
                 child: ElevatedButton(
                   onPressed: () {
                     signUp();
                     EmptyCheck();
                   },
                   child: Text("회원가입"),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 8),
-                child: Text(
-                  outputText,
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
                 ),
               ),
             ],
