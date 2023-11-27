@@ -37,7 +37,7 @@ class MyListView extends StatelessWidget {
               margin: EdgeInsets.all(16),
               child: InkWell(
                 onTap: () {
-                  print('탭한 행: $row');
+                  _showPopup(context, row);
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,6 +68,26 @@ class MyListView extends StatelessWidget {
       },
     );
   }
+}
+
+void _showPopup(BuildContext context, int row) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('팝업 창'),
+        content: Text('탭한 행: $row'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('닫기'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 List<List<String>> itemList = [
